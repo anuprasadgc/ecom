@@ -1,0 +1,95 @@
+{% extends "app_base/home.html" %}
+
+{% block head %}
+
+<script>
+    if(localStorage.getItem('cart')==null){
+    var cart = {};
+    }
+    else{
+        cart = JSON.parse(localStorage.getItem('cart'));
+    }
+    a = Object.entries(cart).length;
+    console.log(a);
+    if(a != 0){
+        
+        var totel = 0;
+        console.log(cart);
+        for(item in cart){
+            let name = cart[item][1];
+            let quantity = cart[item][0];
+            let price = cart[item][2];
+            console.log(item);
+            totel = totel + cart[item][2];
+
+            let idp = "i,"+item;
+            let idm = "d,"+item;
+            itemString = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span id="name">
+                                ${name} x 
+                                <span id="qty" class="badge badge-primary badge-bill">${quantity}</span>
+                            </span>
+                            <span class="badge badge-warning badge-bill">
+                                <!--<button id="${idp}" class="count">+</button>
+                                <button id="${idm}" class="count">-</button>-->
+                                ${price}
+                            </span>
+                        </li>`;
+            $('#item_list').append(itemString);
+        }
+
+        totelPrice = `<li class="list-group-item d-flex justify-content-between align-items-center"><b style="width:100%;text-align:right;padding-right:10rem;">Your totel </b><span style="height:2rem;width:5.5rem;padding:.5rem;font-size:18px;" class="badge badge-success badge-bill">${totel}</span></li>`;
+
+        
+        $('#item_list').append(totelPrice);
+        $('#items').val(JSON.stringify(cart));
+
+        /*
+        $(document).on('click','.count',function(){
+
+            console.log(this.id );
+            let id = this.id;
+            let slipt_id = [];
+            slipt_id = id.split(",");
+            console.log(slipt_id);
+            count = slipt_id[0]
+            item = slipt_id[1]
+            console.log(cart[item][0],totel)
+            if(count=="i"){
+                console.log("i")
+                cart[item][0] = cart[item][0] + 1;
+                totel = totel + cart[item][2];
+                console.log(cart[item][0],totel)
+            }
+            else{
+                cart[item][0] = cart[item][0] - 1;
+                totel = totel - cart[item][2];
+            }
+            console.log(cart[item][0],totel);
+            console.log(cart);
+        });*/
+    }
+    else{
+        itemString = `<li class="list-group-item"><span style="width:100%;height:2rem;color:black;padding:.6rem;" class="badge badge-danger badge-bill"><b>You dont have any item in your cart<b></span></li>`;
+        $('#item_list').append(itemString);
+        document.getElementById('checkout').innerHTML = "";
+    }
+</script>
+
+{% endblock head %}
+
+{% block content %}
+
+<div style="margin-top: 3rem;" class="row">
+    <div class="col-md-12">
+        <ul id="item_list" class="list-group">
+            
+        </ul>
+    </div>
+</div>
+<div style="margin-top: 1rem;" class="row">
+    <div class="col-md-12">
+        <a id="checkout" href="/checkout"><button style="width: 100%;"  class="btn atc btn-warning">Check Out</button></a>
+    </div>
+</div>
+{% endblock content %}
